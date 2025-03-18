@@ -36,7 +36,7 @@ public enum CombinationType {
     //<editor-fold desc="LOCAL FIELDS">
     /** Die Ansammlung von Punkten, aus der die Kombination besteht. */
     @NotNull
-    private final Point[] combinationPoints;
+    private final Point @NotNull [] combinationPoints;
     //</editor-fold>
 
 }

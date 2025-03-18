@@ -27,6 +27,7 @@ public final class GameGui extends Gui {
     /** Die Anzahl der Pixel, die nach allen Berechnungen abgezogen werden, für eine mittige Platzierung des Spielfeldes. */
     public static final int Y_SUBTRACTION = 20;
     /** Der Titel dieses Fensters. */
+    @NotNull
     private static final String TITLE = "Tic Tac Toe";
     //</editor-fold>
 

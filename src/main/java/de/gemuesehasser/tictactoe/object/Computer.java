@@ -21,6 +21,7 @@ public final class Computer {
 
     //<editor-fold desc="CONSTANTS">
     /** Der Scheduler, wodurch das Platzieren des Computers verzögert wird, um die Darstellung dynamischer zu machen. */
+    @NotNull
     private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(1);
     //</editor-fold>
 
@@ -163,6 +164,7 @@ public final class Computer {
      * @return Der Punkt, mit dem ein bestimmter {@link UserType Typ} gewinnen kann. Wenn kein entsprechender Punkt
      * existiert, {@code null}.
      */
+    @Nullable
     private Point getWinPoint(@NotNull final UserType userType) {
         for (@NotNull final CombinationType combinationType : CombinationType.values()) {
             final Point[] combinationPoints = combinationType.getCombinationPoints();

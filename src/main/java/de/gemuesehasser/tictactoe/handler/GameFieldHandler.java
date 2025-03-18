@@ -17,6 +17,7 @@ public final class GameFieldHandler {
 
     //<editor-fold desc="LOCAL FIELDS">
     /** Alle abgespeicherten Felder, die durch diese Instanz des Handlers verwaltet werden. */
+    @NotNull
     private final List<GameField> fields = new ArrayList<>();
     //</editor-fold>
 

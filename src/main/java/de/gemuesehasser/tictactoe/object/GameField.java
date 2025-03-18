@@ -1,10 +1,12 @@
 package de.gemuesehasser.tictactoe.object;
 
 import de.gemuesehasser.tictactoe.constant.UserType;
+import de.gemuesehasser.tictactoe.gui.GameGui;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 import javax.swing.*;
 
@@ -17,8 +19,10 @@ public final class GameField {
 
     //<editor-fold desc="LOCAL FIELDS">
     /** Die Zeile, in der sich dieses Feld auf dem Spielfeld befindet. */
+    @Range(from = 0, to = GameGui.GAME_SIZE - 1)
     private final int row;
     /** Die Spalte, in der sich dieses Feld auf dem Spielfeld befindet. */
+    @Range(from = 0, to = GameGui.GAME_SIZE - 1)
     private final int column;
     /** Der Button, der dieses Feld auf dem Spielfeld in dem Fenster repräsentiert. */
     @NotNull

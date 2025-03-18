@@ -39,7 +39,10 @@ public final class GameEndGui extends Gui {
      * @param title Der Titel dieses Fensters.
      * @param text Der Text, der auf diesem Fenster angezeigt werden soll.
      */
-    public GameEndGui(@NotNull final String title, @NotNull final String text) {
+    public GameEndGui(
+            @NotNull final String title,
+            @NotNull final String text
+    ) {
         super(title, WIDTH, HEIGHT);
         this.text = text;
 
