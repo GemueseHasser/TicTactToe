@@ -42,7 +42,7 @@ public class TicTacToe {
      */
     public static void main(@NotNull final String @NotNull [] args) {
         final GameGui gameGui = new GameGui();
-        gameGui.setVisible(true);
+        gameGui.open();
     }
     //</editor-fold>
 

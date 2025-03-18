@@ -3,15 +3,16 @@ package de.gemuesehasser.tictactoe.gui;
 import de.gemuesehasser.tictactoe.TicTacToe;
 import de.gemuesehasser.tictactoe.constant.UserType;
 import de.gemuesehasser.tictactoe.object.GameField;
-import de.gemuesehasser.tictactoe.object.GameDraw;
+import de.gemuesehasser.tictactoe.object.Gui;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Das Fenster, auf dem das Spiel abgebildet wird.
  */
-public final class GameGui extends JFrame {
+public final class GameGui extends Gui {
 
     //<editor-fold desc="CONSTANTS">
     /** Die Breite dieses Fensters. */
@@ -36,15 +37,7 @@ public final class GameGui extends JFrame {
      * Fenster wird das Spiel abgebildet.
      */
     public GameGui() {
-        super(TITLE);
-        super.setBounds(0, 0, WIDTH, HEIGHT);
-        super.setLocationRelativeTo(null);
-        super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        super.setResizable(false);
-        super.setLayout(null);
-
-        final GameDraw draw = new GameDraw();
-        draw.setBounds(0, 0, WIDTH, HEIGHT);
+        super(TITLE, WIDTH, HEIGHT);
 
         for (int i = 0; i < GAME_SIZE; i++) {
             for (int j = 0; j < GAME_SIZE; j++) {
@@ -54,8 +47,35 @@ public final class GameGui extends JFrame {
                 super.add(button);
             }
         }
+    }
+    //</editor-fold>
 
-        super.add(draw);
+
+    //<editor-fold desc="implementation">
+
+    @Override
+    public void draw(@NotNull final Graphics2D g) {
+        // draw horizontal lines
+        for (int i = 1; i < GAME_SIZE; i++) {
+            final int currentY = (HEIGHT / 2) - Y_SUBTRACTION - ((FIELD_SIZE * GAME_SIZE) / 2) + i * FIELD_SIZE;
+            g.drawLine(
+                    (WIDTH / 2) - ((FIELD_SIZE * GAME_SIZE) / 2),
+                    currentY,
+                    (WIDTH / 2) + ((FIELD_SIZE * GAME_SIZE) / 2),
+                    currentY
+            );
+        }
+
+        // draw vertical lines
+        for (int i = 1; i < GAME_SIZE; i++) {
+            final int currentX = (WIDTH / 2) - ((FIELD_SIZE * GAME_SIZE) / 2) + i * FIELD_SIZE;
+            g.drawLine(
+                    currentX,
+                    (HEIGHT / 2) - Y_SUBTRACTION - ((FIELD_SIZE * GAME_SIZE) / 2),
+                    currentX,
+                    (HEIGHT / 2) - Y_SUBTRACTION + ((FIELD_SIZE * GAME_SIZE) / 2)
+            );
+        }
     }
     //</editor-fold>
 
