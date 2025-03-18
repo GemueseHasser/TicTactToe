@@ -5,6 +5,7 @@ import de.gemuesehasser.tictactoe.constant.UserType;
 import de.gemuesehasser.tictactoe.object.GameField;
 import de.gemuesehasser.tictactoe.object.Gui;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,18 +87,21 @@ public final class GameGui extends Gui {
      * Gibt einen Button zurück, dessen Hintergrund nicht angezeigt wird und welcher als Grundlage eines Feldes auf dem
      * Spielfeld dieses Tic-Tac-Toe Spiels platziert wird.
      *
-     * @param i Die x-Koordinate auf dem Spielfeld.
-     * @param j die y-Koordinate auf dem Spielfeld.
+     * @param row    Die Zeile auf dem Spielfeld.
+     * @param column Die Spalte auf dem Spielfeld.
      *
      * @return Ein Button, dessen Hintergrund nicht angezeigt wird und welcher als Grundlage eines Feldes auf dem Spiel-
      *      feld dieses Tic-Tac-Toe Spiels platziert wird.
      */
     @NotNull
-    private static JButton getTicTacToeButton(int i, int j) {
+    private static JButton getTicTacToeButton(
+            @Range(from = 0, to = GAME_SIZE - 1) final int row,
+            @Range(from = 0, to = GAME_SIZE - 1) final int column
+    ) {
         final JButton button = new JButton();
         button.setBounds(
-                (WIDTH / 2) - ((FIELD_SIZE * GAME_SIZE) / 2) + i * FIELD_SIZE,
-                (HEIGHT / 2) - Y_SUBTRACTION - ((FIELD_SIZE * GAME_SIZE) / 2) + j * FIELD_SIZE,
+                (WIDTH / 2) - ((FIELD_SIZE * GAME_SIZE) / 2) + row * FIELD_SIZE,
+                (HEIGHT / 2) - Y_SUBTRACTION - ((FIELD_SIZE * GAME_SIZE) / 2) + column * FIELD_SIZE,
                 FIELD_SIZE,
                 FIELD_SIZE
         );
@@ -107,7 +111,7 @@ public final class GameGui extends Gui {
         button.addActionListener(e -> {
             if (TicTacToe.getCurrentUserType() != UserType.USER) return;
 
-            final GameField gameField = TicTacToe.GAME_FIELD_HANDLER.getField(i, j);
+            final GameField gameField = TicTacToe.GAME_FIELD_HANDLER.getField(row, column);
 
             assert gameField != null;
             if (gameField.getUserType() != null) return;

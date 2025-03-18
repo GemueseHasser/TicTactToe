@@ -50,8 +50,8 @@ public final class GameFieldHandler {
      *      nicht registriert sein, {@code null}.
      */
     public GameField getField(
-            @Range(from = 0, to = GameGui.GAME_SIZE) final int row,
-            @Range(from = 0, to = GameGui.GAME_SIZE) final int column
+            @Range(from = 0, to = GameGui.GAME_SIZE - 1) final int row,
+            @Range(from = 0, to = GameGui.GAME_SIZE - 1) final int column
     ) {
         for (final GameField field : this.fields) {
             if (field.getRow() == row && field.getColumn() == column) return field;
