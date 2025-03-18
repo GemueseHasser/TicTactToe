@@ -3,7 +3,9 @@ package de.gemuesehasser.tictactoe.object;
 import de.gemuesehasser.tictactoe.TicTacToe;
 import de.gemuesehasser.tictactoe.constant.CombinationType;
 import de.gemuesehasser.tictactoe.constant.UserType;
+import de.gemuesehasser.tictactoe.gui.GameEndGui;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.concurrent.Executors;
@@ -17,8 +19,10 @@ import java.util.concurrent.TimeUnit;
  */
 public final class Computer {
 
+    //<editor-fold desc="CONSTANTS">
     /** Der Scheduler, wodurch das Platzieren des Computers verzögert wird, um die Darstellung dynamischer zu machen. */
     private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(1);
+    //</editor-fold>
 
 
     /**
@@ -27,12 +31,12 @@ public final class Computer {
      */
     public void place() {
         if (checkWin(UserType.USER)) {
-            System.out.println("Nutzer hat gewonnen.");
+            openEndGui(UserType.USER);
             return;
         }
 
         if (isIndecisive()) {
-            System.out.println("Unentschieden.");
+            openEndGui(null);
             return;
         }
 
@@ -44,12 +48,12 @@ public final class Computer {
             bestPlaceField.updateUserType(UserType.COMPUTER);
 
             if (checkWin(UserType.COMPUTER)) {
-                System.out.println("Computer hat gewonnen.");
+                openEndGui(UserType.COMPUTER);
                 return;
             }
 
             if (isIndecisive()) {
-                System.out.println("Unentschieden.");
+                openEndGui(null);
                 return;
             }
 
@@ -57,6 +61,20 @@ public final class Computer {
         }, 500, TimeUnit.MILLISECONDS);
     }
 
+
+    /**
+     * Öffnet das {@link GameEndGui} für den Sieg eines bestimmten {@link UserType Typen}. Wenn der {@link UserType Typ}
+     * {@code null} ist, wird das Fenster für ein Unentschieden geöffnet.
+     *
+     * @param userType Der {@link UserType Typ} des Siegers bzw. {@code null} wenn das Spiel unentschieden ist.
+     */
+    private void openEndGui(@Nullable final UserType userType) {
+        final String title = (userType == null ? "Unentschieden" : userType == UserType.USER ? "Gewonnen" : "Verloren");
+        final String text = (userType == null ? "Es ist unentschieden!" : userType == UserType.USER ? "Du hast das Spiel gewonnen!" : "Du hast das Spiel verloren!");
+
+        final GameEndGui gui = new GameEndGui(title, text);
+        gui.open();
+    }
 
     /**
      * Prüft, ob ein bestimmter {@link UserType Typ} das Spiel gewonnen hat anhand aller Werte des
@@ -135,16 +153,18 @@ public final class Computer {
      *
      * @param userType Der {@link UserType Typ}, für den überprüft werden soll, ob es einen Punkt gibt, mit dem dieser
      *                 das Spiel gewinnen kann.
-     *
      * @return Der Punkt, mit dem ein bestimmter {@link UserType Typ} gewinnen kann. Wenn kein entsprechender Punkt
-     *      existiert, {@code null}.
+     * existiert, {@code null}.
      */
     private Point getWinPoint(@NotNull final UserType userType) {
         for (@NotNull final CombinationType combinationType : CombinationType.values()) {
             final Point[] combinationPoints = combinationType.getCombinationPoints();
-            if (isWinCombination(combinationPoints[0], combinationPoints[1], combinationPoints[2], userType)) return combinationPoints[2];
-            if (isWinCombination(combinationPoints[0], combinationPoints[2], combinationPoints[1], userType)) return combinationPoints[1];
-            if (isWinCombination(combinationPoints[1], combinationPoints[2], combinationPoints[0], userType)) return combinationPoints[0];
+            if (isWinCombination(combinationPoints[0], combinationPoints[1], combinationPoints[2], userType))
+                return combinationPoints[2];
+            if (isWinCombination(combinationPoints[0], combinationPoints[2], combinationPoints[1], userType))
+                return combinationPoints[1];
+            if (isWinCombination(combinationPoints[1], combinationPoints[2], combinationPoints[0], userType))
+                return combinationPoints[0];
         }
 
         return null;
@@ -153,14 +173,13 @@ public final class Computer {
     /**
      * Prüft, ob ein bestimmter {@link UserType Typ} durch einen bestimmten Punkt auf dem Spielfeld gewinnen kann.
      *
-     * @param p1 Der erste Punkt, der schon zu dem {@link UserType Typ} gehören muss.
-     * @param p2 Der zweite Punkt, der schon zu dem {@link UserType Typ} gehören muss.
+     * @param p1            Der erste Punkt, der schon zu dem {@link UserType Typ} gehören muss.
+     * @param p2            Der zweite Punkt, der schon zu dem {@link UserType Typ} gehören muss.
      * @param possiblePlace Der Punkt, der überprüft werden soll, ob der {@link UserType Typ} durch diesen gewinnen
      *                      kann.
-     * @param userType Der {@link UserType Typ}, für den diese Kombination überprüft werden soll.
-     *
+     * @param userType      Der {@link UserType Typ}, für den diese Kombination überprüft werden soll.
      * @return Wenn die drei übergebenen Punkte so zusammenhängen, dass der Nutzer durch das {@code possiblePlace}
-     *      gewinnen kann {@code true}, ansonsten {@code false}.
+     * gewinnen kann {@code true}, ansonsten {@code false}.
      */
     private boolean isWinCombination(
             @NotNull final Point p1,

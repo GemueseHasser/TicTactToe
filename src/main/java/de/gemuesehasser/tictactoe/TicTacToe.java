@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
+
 /**
  * Die Haupt- und Main-Klasse dieser Anwendung. Diese Anwendung stellt ein Tic-Tac-Toe Spiel dar, welches automatisiert
  * durch einen {@link Computer Bot} mit dem Nutzer spielen kann.
@@ -21,6 +23,9 @@ public class TicTacToe {
     /** Der Computer in diesem Spiel, welcher automatisch arbeitet. */
     @NotNull
     public static final Computer COMPUTER = new Computer();
+    /** Die Standard-Schriftart die in dieser Anwendung genutzt wird. */
+    @NotNull
+    public static final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 14);
     //</editor-fold>
 
 
