@@ -30,17 +30,17 @@ public final class Computer {
      * Spiel bereits gewonnen bzw. unentschieden ist.
      */
     public void place() {
-        if (checkWin(UserType.USER)) {
-            openEndGui(UserType.USER);
-            return;
-        }
-
-        if (isIndecisive()) {
-            openEndGui(null);
-            return;
-        }
-
         SCHEDULER.schedule(() -> {
+            if (checkWin(UserType.USER)) {
+                openEndGui(UserType.USER);
+                return;
+            }
+
+            if (isIndecisive()) {
+                openEndGui(null);
+                return;
+            }
+
             final Point bestPlace = getBestPlacement();
             final GameField bestPlaceField = TicTacToe.GAME_FIELD_HANDLER.getField(bestPlace.x, bestPlace.y);
 
