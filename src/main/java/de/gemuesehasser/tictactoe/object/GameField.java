@@ -34,8 +34,14 @@ public final class GameField {
      *
      * @param userType Der neue Typ des Benutzers, der dieses Feld belegen soll.
      */
-    public void updateUserType(@NotNull final UserType userType) {
+    public void updateUserType(@Nullable final UserType userType) {
         this.userType = userType;
+
+        if (userType == null) {
+            this.button.setIcon(null);
+            return;
+        }
+
         this.button.setIcon(new ImageIcon(userType.getImage()));
     }
 

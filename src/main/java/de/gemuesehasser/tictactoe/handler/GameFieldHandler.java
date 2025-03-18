@@ -22,6 +22,15 @@ public final class GameFieldHandler {
 
 
     /**
+     * Resettet alle Felder, die in diesem Handler abgespeichert sind.
+     */
+    public void resetFields() {
+        for (@NotNull final GameField field : fields) {
+            field.updateUserType(null);
+        }
+    }
+
+    /**
      * Registriert ein neues {@link GameField Feld} in diesem Handler.
      *
      * @param field Das Feld, welches registriert bzw. hinzugefügt werden soll.

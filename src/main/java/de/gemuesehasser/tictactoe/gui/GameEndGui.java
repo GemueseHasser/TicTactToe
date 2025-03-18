@@ -1,6 +1,7 @@
 package de.gemuesehasser.tictactoe.gui;
 
 import de.gemuesehasser.tictactoe.TicTacToe;
+import de.gemuesehasser.tictactoe.constant.UserType;
 import de.gemuesehasser.tictactoe.object.Gui;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,10 +41,17 @@ public final class GameEndGui extends Gui {
      */
     public GameEndGui(@NotNull final String title, @NotNull final String text) {
         super(title, WIDTH, HEIGHT);
-        super.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//        super.setUndecorated(true);
-
         this.text = text;
+
+        final JButton reset = new JButton("Nochmal spielen");
+        reset.setBounds(WIDTH / 2 - 70, HEIGHT - 100, 140, 35);
+        reset.addActionListener(e -> {
+            TicTacToe.GAME_FIELD_HANDLER.resetFields();
+            TicTacToe.setCurrentUserType(UserType.USER);
+            super.dispose();
+        });
+
+        super.add(reset);
     }
     //</editor-fold>
 
