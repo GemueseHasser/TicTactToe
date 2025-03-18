@@ -124,6 +124,7 @@ public final class Computer {
      *
      * @return Der günstigste Punkt zum Setzen.
      */
+    @NotNull
     private Point getBestPlacement() {
         // check if computer can win
         final Point computerWinPoint = getWinPoint(UserType.COMPUTER);
@@ -134,6 +135,12 @@ public final class Computer {
         final Point userWinPoint = getWinPoint(UserType.USER);
 
         if (userWinPoint != null) return userWinPoint;
+
+        // check middle field
+        final GameField middleField = TicTacToe.GAME_FIELD_HANDLER.getField(1, 1);
+
+        assert middleField != null;
+        if (middleField.getUserType() == null) return new Point(1, 1);
 
         // place random
         final int randomBounds = TicTacToe.GAME_FIELD_HANDLER.getFields().size();
