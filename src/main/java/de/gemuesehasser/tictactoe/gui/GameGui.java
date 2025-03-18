@@ -7,8 +7,12 @@ import de.gemuesehasser.tictactoe.object.Gui;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Das Fenster, auf dem das Spiel abgebildet wird.
@@ -19,7 +23,7 @@ public final class GameGui extends Gui {
     /** Die Breite dieses Fensters. */
     public static final int WIDTH = 600;
     /** Die Höhe dieses Fensters. */
-    public static final int HEIGHT = 450;
+    public static final int HEIGHT = 500;
     /** Die Größe des Spielfeldes (GAME_SIZE x GAME_SIZE). */
     public static final int GAME_SIZE = 3;
     /** Die Größe eines Feldes auf dem Spielfeld (Quadratisch, also Breite = Höhe). */
@@ -29,6 +33,9 @@ public final class GameGui extends Gui {
     /** Der Titel dieses Fensters. */
     @NotNull
     private static final String TITLE = "Tic Tac Toe";
+    /** Das Bild, welches als Hintergrund des Tic-Tac-Toe Spiels verwendet wird. */
+    @NotNull
+    private final BufferedImage backgroundImage;
     //</editor-fold>
 
 
@@ -40,6 +47,13 @@ public final class GameGui extends Gui {
      */
     public GameGui() {
         super(TITLE, WIDTH, HEIGHT);
+
+        try (final InputStream backgroundImageStream = getClass().getResourceAsStream("/background.jpg")){
+            assert backgroundImageStream != null;
+            this.backgroundImage = ImageIO.read(backgroundImageStream);
+        } catch (@NotNull final IOException e) {
+            throw new RuntimeException(e);
+        }
 
         for (int i = 0; i < GAME_SIZE; i++) {
             for (int j = 0; j < GAME_SIZE; j++) {
@@ -58,28 +72,47 @@ public final class GameGui extends Gui {
     @Override
     public void draw(@NotNull final Graphics2D g) {
         g.setFont(TicTacToe.DEFAULT_FONT);
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        g.setColor(Color.WHITE);
         g.drawString("Gewonnene Runden Spieler: " + UserType.USER.getPoints(), 20, 20);
         g.drawString("Gewonnene Runden Computer: " + UserType.COMPUTER.getPoints(), 20, 40);
+
+        g.drawImage(
+                backgroundImage,
+                (WIDTH / 2) - ((FIELD_SIZE * GAME_SIZE) / 2) - 20,
+                (HEIGHT / 2) - Y_SUBTRACTION - ((FIELD_SIZE * GAME_SIZE) / 2) - 20,
+                FIELD_SIZE * GAME_SIZE + 40,
+                FIELD_SIZE * GAME_SIZE + 40,
+                null
+        );
+        g.drawRect(
+                (WIDTH / 2) - ((FIELD_SIZE * GAME_SIZE) / 2) - 21,
+                (HEIGHT / 2) - Y_SUBTRACTION - ((FIELD_SIZE * GAME_SIZE) / 2) - 21,
+                FIELD_SIZE * GAME_SIZE + 42,
+                FIELD_SIZE * GAME_SIZE + 42
+        );
 
         // draw horizontal lines
         for (int i = 1; i < GAME_SIZE; i++) {
             final int currentY = (HEIGHT / 2) - Y_SUBTRACTION - ((FIELD_SIZE * GAME_SIZE) / 2) + i * FIELD_SIZE;
-            g.drawLine(
+            g.fillRect(
                     (WIDTH / 2) - ((FIELD_SIZE * GAME_SIZE) / 2),
                     currentY,
-                    (WIDTH / 2) + ((FIELD_SIZE * GAME_SIZE) / 2),
-                    currentY
+                    FIELD_SIZE * GAME_SIZE,
+                    3
             );
         }
 
         // draw vertical lines
         for (int i = 1; i < GAME_SIZE; i++) {
             final int currentX = (WIDTH / 2) - ((FIELD_SIZE * GAME_SIZE) / 2) + i * FIELD_SIZE;
-            g.drawLine(
+            g.fillRect(
                     currentX,
                     (HEIGHT / 2) - Y_SUBTRACTION - ((FIELD_SIZE * GAME_SIZE) / 2),
-                    currentX,
-                    (HEIGHT / 2) - Y_SUBTRACTION + ((FIELD_SIZE * GAME_SIZE) / 2)
+                    3,
+                    FIELD_SIZE * GAME_SIZE
             );
         }
     }
