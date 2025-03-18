@@ -33,12 +33,12 @@ public final class Computer {
     public void place() {
         SCHEDULER.schedule(() -> {
             if (checkWin(UserType.USER)) {
-                openEndGui(UserType.USER);
+                handleGameEnd(UserType.USER);
                 return;
             }
 
             if (isIndecisive()) {
-                openEndGui(null);
+                handleGameEnd(null);
                 return;
             }
 
@@ -49,12 +49,12 @@ public final class Computer {
             bestPlaceField.updateUserType(UserType.COMPUTER);
 
             if (checkWin(UserType.COMPUTER)) {
-                openEndGui(UserType.COMPUTER);
+                handleGameEnd(UserType.COMPUTER);
                 return;
             }
 
             if (isIndecisive()) {
-                openEndGui(null);
+                handleGameEnd(null);
                 return;
             }
 
@@ -68,11 +68,14 @@ public final class Computer {
      * {@code null} ist, wird das Fenster für ein Unentschieden geöffnet. Außerdem wird der letzte Gewinner gesetzt,
      * damit beim Neustart des Spiels ermittelt werden kann, wer den ersten Zug machen darf. Sollte das Spiel
      * unentschieden sein, wird der letzte Gewinner automatisch auf den Typen des Computers gesetzt, damit der Nutzer
-     * den ersten Zug machen darf.
+     * den ersten Zug machen darf. Zuletzt wird der Punktestand des jeweiligen Typen des Gewinners um 1 erhöht - sofern
+     * das Spiel nicht unentschieden ausgegangen ist. Die Grafik-Instanz des
+     * {@link de.gemuesehasser.tictactoe.gui.GameGui}, welches als Konstante in der Haupt- und Main-Klasse dieser
+     * Anwendung abgespeichert ist, wird aktualisiert, um immer den aktuellen Punktestand anzuzeigen.
      *
      * @param userType Der {@link UserType Typ} des Siegers bzw. {@code null} wenn das Spiel unentschieden ist.
      */
-    private void openEndGui(@Nullable final UserType userType) {
+    private void handleGameEnd(@Nullable final UserType userType) {
         final String title = (userType == null ? "Unentschieden" : userType == UserType.USER ? "Gewonnen" : "Verloren");
         final String text = (userType == null ? "Es ist unentschieden!" : userType == UserType.USER ? "Du hast das Spiel gewonnen!" : "Du hast das Spiel verloren!");
 
@@ -80,6 +83,11 @@ public final class Computer {
         gui.open();
 
         TicTacToe.GAME_FIELD_HANDLER.setLastWinner(userType == null ? UserType.COMPUTER : userType);
+
+        if (userType == null) return;
+
+        userType.incrementPoints();
+        TicTacToe.GAME_GUI.repaint();
     }
 
     /**

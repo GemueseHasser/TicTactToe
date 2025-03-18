@@ -26,6 +26,9 @@ public class TicTacToe {
     /** Die Standard-Schriftart die in dieser Anwendung genutzt wird. */
     @NotNull
     public static final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 14);
+    /** Das {@link de.gemuesehasser.tictactoe.object.Gui Fenster}, in dem das eigentliche Spiel dargestellt wird. */
+    @NotNull
+    public static final GameGui GAME_GUI = new GameGui();
     //</editor-fold>
 
 
@@ -46,8 +49,7 @@ public class TicTacToe {
      * @param args Die Argumente, die beim Starten der Anwendung von der JRE übergeben werden.
      */
     public static void main(@NotNull final String @NotNull [] args) {
-        final GameGui gameGui = new GameGui();
-        gameGui.open();
+        GAME_GUI.open();
     }
     //</editor-fold>
 

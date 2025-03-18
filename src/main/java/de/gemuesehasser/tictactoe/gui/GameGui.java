@@ -57,6 +57,10 @@ public final class GameGui extends Gui {
 
     @Override
     public void draw(@NotNull final Graphics2D g) {
+        g.setFont(TicTacToe.DEFAULT_FONT);
+        g.drawString("Gewonnene Runden Spieler: " + UserType.USER.getPoints(), 20, 20);
+        g.drawString("Gewonnene Runden Computer: " + UserType.COMPUTER.getPoints(), 20, 40);
+
         // draw horizontal lines
         for (int i = 1; i < GAME_SIZE; i++) {
             final int currentY = (HEIGHT / 2) - Y_SUBTRACTION - ((FIELD_SIZE * GAME_SIZE) / 2) + i * FIELD_SIZE;

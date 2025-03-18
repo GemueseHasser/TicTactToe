@@ -29,6 +29,9 @@ public enum UserType {
     /** Das Bild, welches diesen Typen beschreibt. */
     @NotNull
     private final BufferedImage image = new BufferedImage(GameGui.FIELD_SIZE, GameGui.FIELD_SIZE, BufferedImage.TYPE_INT_ARGB);
+    /** Die Anzahl an Punkten, die ein {@link UserType Typ} bereits durch gewonnene Runden erzielt hat. */
+    @Getter
+    private int points;
     //</editor-fold>
 
 
@@ -52,5 +55,14 @@ public enum UserType {
         }
     }
     //</editor-fold>
+
+
+    /**
+     * Erhöht die Anzahl der bisher erlangten Punkte dieses Typen um 1. Die Anzahl der Punkte stellt die Anzahl der
+     * gewonnenen Runden im {@link de.gemuesehasser.tictactoe.TicTacToe Spiel} dar.
+     */
+    public void incrementPoints() {
+        this.points++;
+    }
 
 }
