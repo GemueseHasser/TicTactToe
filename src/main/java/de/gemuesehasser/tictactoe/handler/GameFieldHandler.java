@@ -1,9 +1,12 @@
 package de.gemuesehasser.tictactoe.handler;
 
+import de.gemuesehasser.tictactoe.constant.UserType;
 import de.gemuesehasser.tictactoe.gui.GameGui;
 import de.gemuesehasser.tictactoe.object.GameField;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.ArrayList;
@@ -19,6 +22,11 @@ public final class GameFieldHandler {
     /** Alle abgespeicherten Felder, die durch diese Instanz des Handlers verwaltet werden. */
     @NotNull
     private final List<GameField> fields = new ArrayList<>();
+    /** Der {@link UserType Typ}, der zuletzt gewonnen hat innerhalb dieser Ansammlung an Feldern. */
+    @Getter
+    @Setter
+    @Nullable
+    private UserType lastWinner;
     //</editor-fold>
 
 

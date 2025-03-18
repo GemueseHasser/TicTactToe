@@ -65,7 +65,10 @@ public final class Computer {
 
     /**
      * Öffnet das {@link GameEndGui} für den Sieg eines bestimmten {@link UserType Typen}. Wenn der {@link UserType Typ}
-     * {@code null} ist, wird das Fenster für ein Unentschieden geöffnet.
+     * {@code null} ist, wird das Fenster für ein Unentschieden geöffnet. Außerdem wird der letzte Gewinner gesetzt,
+     * damit beim Neustart des Spiels ermittelt werden kann, wer den ersten Zug machen darf. Sollte das Spiel
+     * unentschieden sein, wird der letzte Gewinner automatisch auf den Typen des Computers gesetzt, damit der Nutzer
+     * den ersten Zug machen darf.
      *
      * @param userType Der {@link UserType Typ} des Siegers bzw. {@code null} wenn das Spiel unentschieden ist.
      */
@@ -75,6 +78,8 @@ public final class Computer {
 
         final GameEndGui gui = new GameEndGui(title, text);
         gui.open();
+
+        TicTacToe.GAME_FIELD_HANDLER.setLastWinner(userType == null ? UserType.COMPUTER : userType);
     }
 
     /**

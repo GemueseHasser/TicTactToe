@@ -50,8 +50,12 @@ public final class GameEndGui extends Gui {
         reset.setBounds(WIDTH / 2 - 70, HEIGHT - 100, 140, 35);
         reset.addActionListener(e -> {
             TicTacToe.GAME_FIELD_HANDLER.resetFields();
-            TicTacToe.setCurrentUserType(UserType.USER);
+            TicTacToe.setCurrentUserType(
+                    TicTacToe.GAME_FIELD_HANDLER.getLastWinner() == UserType.USER ? UserType.COMPUTER : UserType.USER
+            );
             super.dispose();
+
+            if (TicTacToe.getCurrentUserType() == UserType.COMPUTER) TicTacToe.COMPUTER.place();
         });
 
         super.add(reset);
