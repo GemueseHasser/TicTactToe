@@ -5,6 +5,7 @@ import de.gemuesehasser.tictactoe.constant.UserType;
 import de.gemuesehasser.tictactoe.object.Drawable;
 import de.gemuesehasser.tictactoe.object.GameField;
 import de.gemuesehasser.tictactoe.object.Gui;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -22,7 +23,7 @@ public final class GameGui extends Gui implements Drawable {
 
     //<editor-fold desc="CONSTANTS">
     /** Die Breite dieses Fensters. */
-    public static final int WIDTH = 600;
+    public static final int WIDTH = 750;
     /** Die Höhe dieses Fensters. */
     public static final int HEIGHT = 500;
     /** Die Größe des Spielfeldes (GAME_SIZE x GAME_SIZE). */
@@ -37,6 +38,10 @@ public final class GameGui extends Gui implements Drawable {
     /** Das Bild, welches als Hintergrund des Tic-Tac-Toe Spiels verwendet wird. */
     @NotNull
     private final BufferedImage backgroundImage;
+    /** Der Button, der angezeigt wird, sobald das Spiel vorbei ist, womit das Spiel neu gestartet werden kann. */
+    @Getter
+    @NotNull
+    private final JButton resetButton = new JButton("Nochmal Spielen");
     //</editor-fold>
 
 
@@ -57,6 +62,22 @@ public final class GameGui extends Gui implements Drawable {
         } catch (@NotNull final IOException e) {
             throw new RuntimeException(e);
         }
+
+        this.resetButton.setBounds(30, 70, 140, 35);
+        this.resetButton.addActionListener(e -> {
+            resetButton.setVisible(false);
+            TicTacToe.GAME_FIELD_HANDLER.resetFields();
+            TicTacToe.setCurrentUserType(
+                    TicTacToe.GAME_FIELD_HANDLER.getLastWinner() == UserType.USER ? UserType.COMPUTER : UserType.USER
+            );
+            TicTacToe.COMPUTER.setWinCombinationType(null);
+            TicTacToe.GAME_GUI.repaint();
+
+            if (TicTacToe.getCurrentUserType() == UserType.COMPUTER) TicTacToe.COMPUTER.place();
+        });
+        this.resetButton.setVisible(false);
+
+        super.add(resetButton);
 
         for (int i = 0; i < GAME_SIZE; i++) {
             for (int j = 0; j < GAME_SIZE; j++) {

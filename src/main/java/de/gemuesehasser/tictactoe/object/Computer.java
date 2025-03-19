@@ -3,7 +3,7 @@ package de.gemuesehasser.tictactoe.object;
 import de.gemuesehasser.tictactoe.TicTacToe;
 import de.gemuesehasser.tictactoe.constant.CombinationType;
 import de.gemuesehasser.tictactoe.constant.UserType;
-import de.gemuesehasser.tictactoe.gui.GameEndGui;
+import de.gemuesehasser.tictactoe.gui.GameGui;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +32,9 @@ public final class Computer implements Drawable {
     /** Der Typ der Kombination, mit der ein bestimmter {@link UserType} gewonnen hat (Standardmäßig {@code null}). */
     @Nullable
     private CombinationType winCombinationType;
+    /** Der {@link UserType Typ}, der das Spiel zuletzt gewonnen hat ({@code null}, wenn es unentschieden war). */
+    @Nullable
+    private UserType lastGameEndUserType;
     //</editor-fold>
 
 
@@ -77,29 +80,25 @@ public final class Computer implements Drawable {
 
 
     /**
-     * Öffnet das {@link GameEndGui} für den Sieg eines bestimmten {@link UserType Typen}. Wenn der {@link UserType Typ}
-     * {@code null} ist, wird das Fenster für ein Unentschieden geöffnet. Außerdem wird der letzte Gewinner gesetzt,
-     * damit beim Neustart des Spiels ermittelt werden kann, wer den ersten Zug machen darf. Sollte das Spiel
-     * unentschieden sein, wird der letzte Gewinner automatisch auf den Typen des Computers gesetzt, damit der Nutzer
-     * den ersten Zug machen darf. Zuletzt wird der Punktestand des jeweiligen Typen des Gewinners um 1 erhöht - sofern
-     * das Spiel nicht unentschieden ausgegangen ist. Die Grafik-Instanz des
+     * Zeigt den Reset-Button und den Text für den Sieg eines bestimmten {@link UserType Typen}. Wenn der
+     * {@link UserType Typ} {@code null} ist, wird das Fenster für ein Unentschieden geöffnet. Außerdem wird der letzte
+     * Gewinner gesetzt, damit beim Neustart des Spiels ermittelt werden kann, wer den ersten Zug machen darf. Sollte
+     * das Spiel unentschieden sein, wird der letzte Gewinner automatisch auf den Typen des Computers gesetzt, damit der
+     * Nutzer den ersten Zug machen darf. Zuletzt wird der Punktestand des jeweiligen Typen des Gewinners um 1
+     * erhöht - sofern das Spiel nicht unentschieden ausgegangen ist. Die Grafik-Instanz des
      * {@link de.gemuesehasser.tictactoe.gui.GameGui}, welches als Konstante in der Haupt- und Main-Klasse dieser
      * Anwendung abgespeichert ist, wird aktualisiert, um immer den aktuellen Punktestand anzuzeigen.
      *
      * @param userType Der {@link UserType Typ} des Siegers bzw. {@code null} wenn das Spiel unentschieden ist.
      */
     private void handleGameEnd(@Nullable final UserType userType) {
-        final String title = (userType == null ? "Unentschieden" : userType == UserType.USER ? "Gewonnen" : "Verloren");
-        final String text = (userType == null ? "Es ist unentschieden!" : userType == UserType.USER ? "Du hast das Spiel gewonnen!" : "Du hast das Spiel verloren!");
+        this.lastGameEndUserType = userType;
 
-        final GameEndGui gui = new GameEndGui(title, text);
-        gui.open();
-
+        TicTacToe.GAME_GUI.getResetButton().setVisible(true);
         TicTacToe.GAME_FIELD_HANDLER.setLastWinner(userType == null ? UserType.COMPUTER : userType);
 
-        if (userType == null) return;
+        if (userType != null) userType.incrementPoints();
 
-        userType.incrementPoints();
         TicTacToe.GAME_GUI.repaint();
     }
 
@@ -239,7 +238,15 @@ public final class Computer implements Drawable {
 
     @Override
     public void draw(@NotNull final Graphics2D g) {
-        if (this.winCombinationType == null) return;
+        if (this.winCombinationType == null && !isIndecisive()) return;
+
+        g.setColor(Color.WHITE);
+        final String text = (lastGameEndUserType == null ? "Es ist unentschieden!" :
+                lastGameEndUserType == UserType.USER ? "Du hast das Spiel gewonnen!" : "Der Computer hat das Spiel gewonnen!");
+
+        g.drawString(text, GameGui.WIDTH / 2, 20);
+
+        if (isIndecisive()) return;
 
         for (@NotNull final Point point : this.winCombinationType.getCombinationPoints()) {
             final GameField field = TicTacToe.GAME_FIELD_HANDLER.getField(point.x, point.y);
