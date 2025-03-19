@@ -49,7 +49,7 @@ public enum UserType {
             final BufferedImage loadedImage = ImageIO.read(Objects.requireNonNull(
                     getClass().getResourceAsStream("/" + imageName)
             ));
-            this.image.getGraphics().drawImage(loadedImage, 0, 0, GameGui.FIELD_SIZE, GameGui.FIELD_SIZE, null);
+            this.image.getGraphics().drawImage(loadedImage, 10, 10, GameGui.FIELD_SIZE - 20, GameGui.FIELD_SIZE - 20, null);
         } catch (@NotNull final IOException e) {
             throw new RuntimeException(e);
         }

@@ -2,6 +2,7 @@ package de.gemuesehasser.tictactoe.gui;
 
 import de.gemuesehasser.tictactoe.TicTacToe;
 import de.gemuesehasser.tictactoe.constant.UserType;
+import de.gemuesehasser.tictactoe.object.Drawable;
 import de.gemuesehasser.tictactoe.object.Gui;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +13,7 @@ import java.awt.*;
  * Dieses Fenster wird geöffnet, sobald das Spiel beendet ist. Dabei wird dem Nutzer dann angezeigt, ob er das Spiel
  * gewonnen, verloren oder unentschieden gespielt hat.
  */
-public final class GameEndGui extends Gui {
+public final class GameEndGui extends Gui implements Drawable {
 
     //<editor-fold desc="CONSTANTS">
     /** Die Breite dieses Fensters. */
@@ -44,6 +45,7 @@ public final class GameEndGui extends Gui {
             @NotNull final String text
     ) {
         super(title, WIDTH, HEIGHT);
+        super.addDrawable(this);
         this.text = text;
 
         final JButton reset = new JButton("Nochmal spielen");
@@ -54,6 +56,8 @@ public final class GameEndGui extends Gui {
                     TicTacToe.GAME_FIELD_HANDLER.getLastWinner() == UserType.USER ? UserType.COMPUTER : UserType.USER
             );
             super.dispose();
+            TicTacToe.COMPUTER.setWinCombinationType(null);
+            TicTacToe.GAME_GUI.repaint();
 
             if (TicTacToe.getCurrentUserType() == UserType.COMPUTER) TicTacToe.COMPUTER.place();
         });

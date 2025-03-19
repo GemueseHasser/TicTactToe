@@ -4,6 +4,7 @@ import de.gemuesehasser.tictactoe.TicTacToe;
 import de.gemuesehasser.tictactoe.constant.CombinationType;
 import de.gemuesehasser.tictactoe.constant.UserType;
 import de.gemuesehasser.tictactoe.gui.GameEndGui;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,12 +18,20 @@ import java.util.concurrent.TimeUnit;
  * Ein {@link Computer} kann eigenständig den besten Platz zum Setzen herausfinden und dort sein Symbol platzieren.
  * Dabei überprüft der Computer vor und nach jedem seiner Züge, ob das Spiel bereits gewonnen oder unentschieden ist.
  */
-public final class Computer {
+@Setter
+public final class Computer implements Drawable {
 
     //<editor-fold desc="CONSTANTS">
     /** Der Scheduler, wodurch das Platzieren des Computers verzögert wird, um die Darstellung dynamischer zu machen. */
     @NotNull
     private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(1);
+    //</editor-fold>
+
+
+    //<editor-fold desc="LOCAL FIELDS">
+    /** Der Typ der Kombination, mit der ein bestimmter {@link UserType} gewonnen hat (Standardmäßig {@code null}). */
+    @Nullable
+    private CombinationType winCombinationType;
     //</editor-fold>
 
 
@@ -32,7 +41,9 @@ public final class Computer {
      */
     public void place() {
         SCHEDULER.schedule(() -> {
-            if (checkWin(UserType.USER)) {
+            final CombinationType userWinCombination = checkWin(UserType.USER);
+            if (userWinCombination != null) {
+                winCombinationType = userWinCombination;
                 handleGameEnd(UserType.USER);
                 return;
             }
@@ -48,7 +59,9 @@ public final class Computer {
             assert bestPlaceField != null;
             bestPlaceField.updateUserType(UserType.COMPUTER);
 
-            if (checkWin(UserType.COMPUTER)) {
+            final CombinationType computerWinCombination = checkWin(UserType.COMPUTER);
+            if (computerWinCombination != null) {
+                winCombinationType = computerWinCombination;
                 handleGameEnd(UserType.COMPUTER);
                 return;
             }
@@ -92,13 +105,16 @@ public final class Computer {
 
     /**
      * Prüft, ob ein bestimmter {@link UserType Typ} das Spiel gewonnen hat anhand aller Werte des
-     * {@link CombinationType}.
+     * {@link CombinationType}. Sollte der Typ gewonnen haben, wird der Typ der Kombination zurückgegeben, mit der der
+     * {@link UserType Typ} gewonnen hat.
      *
      * @param userType Der {@link UserType Typ}, für den ein Sieg des Spiels überprüft werden soll.
      *
-     * @return Wenn der {@link UserType Typ} das Spiel gewonnen hat {@code true} ansonsten {@code false}.
+     * @return Wenn der {@link UserType Typ} das Spiel gewonnen hat, wird der {@link CombinationType Kombinations-Typ}
+     *      zurückgegeben, ansonsten {@code null}.
      */
-    private boolean checkWin(@NotNull final UserType userType) {
+    @Nullable
+    private CombinationType checkWin(@NotNull final UserType userType) {
         for (@NotNull final CombinationType combinationType : CombinationType.values()) {
             boolean win = true;
 
@@ -112,10 +128,10 @@ public final class Computer {
                 }
             }
 
-            if (win) return true;
+            if (win) return combinationType;
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -219,4 +235,24 @@ public final class Computer {
         return field1.getUserType() == userType && field2.getUserType() == userType && possibleField.getUserType() == null;
     }
 
+    //<editor-fold desc="implementation">
+
+    @Override
+    public void draw(@NotNull final Graphics2D g) {
+        if (this.winCombinationType == null) return;
+
+        for (@NotNull final Point point : this.winCombinationType.getCombinationPoints()) {
+            final GameField field = TicTacToe.GAME_FIELD_HANDLER.getField(point.x, point.y);
+
+            assert field != null;
+            g.setColor(Color.GREEN);
+            g.fillOval(
+                    field.getButton().getX() + 5,
+                    field.getButton().getY() + 5,
+                    field.getButton().getWidth() - 10,
+                    field.getButton().getHeight() - 10
+            );
+        }
+    }
+    //</editor-fold>
 }

@@ -5,13 +5,22 @@ import org.jetbrains.annotations.Range;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Ein {@link Gui} stellt eine individuelle Anpassung eines {@link JFrame Fensters} dar, welches in seinen Eigenschaften
  * so individualisiert wurde, dass das Fenster sehr einfach für diese Anwendung initialisiert werden kann und automatisch
  * mit einem Zeichen-Objekt ausgerüstet ist.
  */
-public abstract class Gui extends JFrame {
+public class Gui extends JFrame {
+
+    //<editor-fold desc="LOCAL FIELDS">
+    /** Alle {@link Drawable Objekte}, dessen Grafik-Implementation auf dieses Fenster gezeichnet wird. */
+    @NotNull
+    private final List<Drawable> drawables = new ArrayList<>();
+    //</editor-fold>
+
 
     //<editor-fold desc="CONSTRUCTORS">
 
@@ -53,11 +62,13 @@ public abstract class Gui extends JFrame {
     }
 
     /**
-     * Zeichnet alle Komponenten auf dieses Fenster.
+     * Fügt ein {@link Drawable} zu diesem Fenster hinzu, welche bei jedem repaint() Aufruf gezeichnet wird.
      *
-     * @param g Die {@link Graphics2D Grafik}, mit der gezeichnet wird.
+     * @param drawable Das {@link Drawable}, welches diesem Fenster hinzugefügt werden soll.
      */
-    public abstract void draw(@NotNull final Graphics2D g);
+    protected void addDrawable(@NotNull final Drawable drawable) {
+        this.drawables.add(drawable);
+    }
 
 
     //<editor-fold desc="Draw">
@@ -66,7 +77,7 @@ public abstract class Gui extends JFrame {
      * Ein {@link Draw} stellt eine Zeichen-Instanz dar, mit dessen Hilfe alle grafischen Komponenten auf dieses Fenster
      * gezeichnet werden.
      */
-    private final class Draw extends JLabel {
+    public final class Draw extends JLabel {
 
         //<editor-fold desc="implementation">
         @Override
@@ -77,7 +88,9 @@ public abstract class Gui extends JFrame {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-            draw(g2d);
+            for (final Drawable drawable : drawables) {
+                drawable.draw(g2d);
+            }
         }
         //</editor-fold>
     }

@@ -2,6 +2,7 @@ package de.gemuesehasser.tictactoe.gui;
 
 import de.gemuesehasser.tictactoe.TicTacToe;
 import de.gemuesehasser.tictactoe.constant.UserType;
+import de.gemuesehasser.tictactoe.object.Drawable;
 import de.gemuesehasser.tictactoe.object.GameField;
 import de.gemuesehasser.tictactoe.object.Gui;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +18,7 @@ import java.io.InputStream;
 /**
  * Das Fenster, auf dem das Spiel abgebildet wird.
  */
-public final class GameGui extends Gui {
+public final class GameGui extends Gui implements Drawable {
 
     //<editor-fold desc="CONSTANTS">
     /** Die Breite dieses Fensters. */
@@ -47,6 +48,8 @@ public final class GameGui extends Gui {
      */
     public GameGui() {
         super(TITLE, WIDTH, HEIGHT);
+        super.addDrawable(this);
+        super.addDrawable(TicTacToe.COMPUTER);
 
         try (final InputStream backgroundImageStream = getClass().getResourceAsStream("/background.jpg")){
             assert backgroundImageStream != null;
