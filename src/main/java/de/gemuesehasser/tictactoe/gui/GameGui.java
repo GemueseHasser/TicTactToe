@@ -35,6 +35,10 @@ public final class GameGui extends Gui implements Drawable {
     /** Der Titel dieses Fensters. */
     @NotNull
     private static final String TITLE = "Tic Tac Toe";
+    //</editor-fold>
+
+
+    //<editor-fold desc="LOCAL FIELDS">
     /** Das Bild, welches als Hintergrund des Tic-Tac-Toe Spiels verwendet wird. */
     @NotNull
     private final BufferedImage backgroundImage;
