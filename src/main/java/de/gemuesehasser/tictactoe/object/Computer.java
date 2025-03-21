@@ -243,11 +243,12 @@ public final class Computer implements Drawable {
     public void draw(@NotNull final Graphics2D g) {
         if (this.winCombinationType == null && !isIndecisive()) return;
 
+        g.setFont(TicTacToe.DEFAULT_FONT);
         g.setColor(Color.WHITE);
         final String text = (lastGameEndUserType == null ? "Es ist unentschieden!" :
                 lastGameEndUserType == UserType.USER ? "Du hast das Spiel gewonnen!" : "Der Computer hat das Spiel gewonnen!");
 
-        g.drawString(text, GameGui.WIDTH / 2, 20);
+        g.drawString(text, GameGui.WIDTH / 2 - g.getFontMetrics().stringWidth(text) / 2, 30);
 
         if (isIndecisive()) return;
 

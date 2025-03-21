@@ -25,7 +25,7 @@ public class TicTacToe {
     public static final Computer COMPUTER = new Computer();
     /** Die Standard-Schriftart die in dieser Anwendung genutzt wird. */
     @NotNull
-    public static final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 14);
+    public static final Font DEFAULT_FONT = new Font("Arial", Font.PLAIN, 18);
     /** Das {@link de.gemuesehasser.tictactoe.object.Gui Fenster}, in dem das eigentliche Spiel dargestellt wird. */
     @NotNull
     public static final GameGui GAME_GUI = new GameGui();

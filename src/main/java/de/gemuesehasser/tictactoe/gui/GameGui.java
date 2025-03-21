@@ -22,27 +22,53 @@ import java.io.InputStream;
 public final class GameGui extends Gui implements Drawable {
 
     //<editor-fold desc="CONSTANTS">
-    /** Die Breite dieses Fensters. */
+    /**
+     * Die Breite dieses Fensters.
+     */
     public static final int WIDTH = 750;
-    /** Die Höhe dieses Fensters. */
+    /**
+     * Die Höhe dieses Fensters.
+     */
     public static final int HEIGHT = 500;
-    /** Die Größe des Spielfeldes (GAME_SIZE x GAME_SIZE). */
+    /**
+     * Die Größe des Spielfeldes (GAME_SIZE x GAME_SIZE).
+     */
     public static final int GAME_SIZE = 3;
-    /** Die Größe eines Feldes auf dem Spielfeld (Quadratisch, also Breite = Höhe). */
+    /**
+     * Die Größe eines Feldes auf dem Spielfeld (Quadratisch, also Breite = Höhe).
+     */
     public static final int FIELD_SIZE = 100;
-    /** Die Anzahl der Pixel, die nach allen Berechnungen abgezogen werden, für eine mittige Platzierung des Spielfeldes. */
+    /**
+     * Die Anzahl der Pixel, die nach allen Berechnungen abgezogen werden, für eine mittige Platzierung des Spielfeldes.
+     */
     public static final int Y_SUBTRACTION = 20;
-    /** Der Titel dieses Fensters. */
+    /**
+     * Der Titel dieses Fensters.
+     */
     @NotNull
     private static final String TITLE = "Tic Tac Toe";
     //</editor-fold>
 
 
     //<editor-fold desc="LOCAL FIELDS">
-    /** Das Bild, welches als Hintergrund des Tic-Tac-Toe Spiels verwendet wird. */
+    /**
+     * Das Bild, welches als Hintergrund des Tic-Tac-Toe Spiels verwendet wird.
+     */
     @NotNull
     private final BufferedImage backgroundImage;
-    /** Der Button, der angezeigt wird, sobald das Spiel vorbei ist, womit das Spiel neu gestartet werden kann. */
+    /**
+     * Das Bild, welches als Icon dient, um die Siege des Nutzers darzustellen.
+     */
+    @NotNull
+    private final BufferedImage winImage;
+    /**
+     * Das Bild, welches als Icon dient, um die Niederlagen des Nutzers (Siege des Computers) darzustellen.
+     */
+    @NotNull
+    private final BufferedImage loseImage;
+    /**
+     * Der Button, der angezeigt wird, sobald das Spiel vorbei ist, womit das Spiel neu gestartet werden kann.
+     */
     @Getter
     @NotNull
     private final JButton resetButton = new JButton("Nochmal Spielen");
@@ -60,14 +86,23 @@ public final class GameGui extends Gui implements Drawable {
         super.addDrawable(this);
         super.addDrawable(TicTacToe.COMPUTER);
 
-        try (final InputStream backgroundImageStream = getClass().getResourceAsStream("/background.jpg")){
+        // load image resources
+        try (final InputStream backgroundImageStream = getClass().getResourceAsStream("/background.jpg");
+             final InputStream loseImageStream = getClass().getResourceAsStream("/lose.jpg");
+             final InputStream winImageStream = getClass().getResourceAsStream("/win.png")
+        ) {
             assert backgroundImageStream != null;
+            assert winImageStream != null;
+            assert loseImageStream != null;
             this.backgroundImage = ImageIO.read(backgroundImageStream);
+            this.winImage = ImageIO.read(winImageStream);
+            this.loseImage = ImageIO.read(loseImageStream);
         } catch (@NotNull final IOException e) {
             throw new RuntimeException(e);
         }
 
-        this.resetButton.setBounds(30, 70, 140, 35);
+        // initialize reset button
+        this.resetButton.setBounds(25, HEIGHT - 100, 140, 35);
         this.resetButton.addActionListener(e -> {
             resetButton.setVisible(false);
             TicTacToe.GAME_FIELD_HANDLER.resetFields();
@@ -99,13 +134,16 @@ public final class GameGui extends Gui implements Drawable {
 
     @Override
     public void draw(@NotNull final Graphics2D g) {
-        g.setFont(TicTacToe.DEFAULT_FONT);
+        g.setFont(TicTacToe.DEFAULT_FONT.deriveFont(25F));
         g.setColor(Color.DARK_GRAY);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         g.setColor(Color.WHITE);
-        g.drawString("Gewonnene Runden Spieler: " + UserType.USER.getPoints(), 20, 20);
-        g.drawString("Gewonnene Runden Computer: " + UserType.COMPUTER.getPoints(), 20, 40);
+        g.drawImage(winImage, 20, 35, 60, 60, null);
+        g.drawString(UserType.USER.getPoints() + "", 90, 75);
+
+        g.drawImage(loseImage, WIDTH - 95, 35, 60, 60, null);
+        g.drawString(UserType.COMPUTER.getPoints() + "", WIDTH - 125, 75);
 
         g.drawImage(
                 backgroundImage,
@@ -155,9 +193,8 @@ public final class GameGui extends Gui implements Drawable {
      *
      * @param row    Die Zeile auf dem Spielfeld.
      * @param column Die Spalte auf dem Spielfeld.
-     *
      * @return Ein Button, dessen Hintergrund nicht angezeigt wird und welcher als Grundlage eines Feldes auf dem Spiel-
-     *      feld dieses Tic-Tac-Toe Spiels platziert wird.
+     * feld dieses Tic-Tac-Toe Spiels platziert wird.
      */
     @NotNull
     private static JButton getTicTacToeButton(
