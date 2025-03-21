@@ -134,11 +134,14 @@ public final class Computer implements Drawable {
     }
 
     /**
-     * Prüft, ob alle Felder bereits belegt sind, also ob das Spiel unentschieden ist.
+     * Prüft, ob alle Felder bereits belegt sind und es keinen Gewinner gibt, also ob das Spiel unentschieden ist.
      *
-     * @return Wenn alle Felder des Spielfeldes belegt sind {@code true}, ansonsten {@code false}.
+     * @return Wenn alle Felder des Spielfeldes belegt sind und es keinen Gewinner gibt {@code true},
+     *      ansonsten {@code false}.
      */
     private boolean isIndecisive() {
+        if (checkWin(UserType.USER) != null || checkWin(UserType.COMPUTER) != null) return false;
+
         for (@NotNull final GameField field : TicTacToe.GAME_FIELD_HANDLER.getFields()) {
             if (field.getUserType() == null) return false;
         }
