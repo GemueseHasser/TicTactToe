@@ -140,10 +140,10 @@ public final class GameGui extends Gui implements Drawable {
 
         g.setColor(Color.WHITE);
         g.drawImage(winImage, 20, 35, 60, 60, null);
-        g.drawString(UserType.USER.getPoints() + "", 90, 75);
+        g.drawString(UserType.USER.getPoints() + "", 100, 75);
 
         g.drawImage(loseImage, WIDTH - 95, 35, 60, 60, null);
-        g.drawString(UserType.COMPUTER.getPoints() + "", WIDTH - 125, 75);
+        g.drawString(UserType.COMPUTER.getPoints() + "", WIDTH - 135, 75);
 
         g.drawImage(
                 backgroundImage,
